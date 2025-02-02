@@ -1,0 +1,104 @@
+{
+    "quiz": [
+        {
+            "question": "D'après la description archéologique du site n°143 CNSAMH, quel élément suggère le plus fortement la présence d'une structure antique de pressurage d'huile d'olive ?",
+            "options": [
+                "La présence de céramique sigillée et de cailloux calcinés sur le flanc occidental.",
+                "La découverte d'un mortier, de deux contrepoids et d'une pierre de fixation de jumelle.",
+                "La présence de tambours de colonnes cannelés et rudentés en calcaire blanc."
+            ],
+            "correct_answer": "La découverte d'un mortier, de deux contrepoids et d'une pierre de fixation de jumelle.",
+            "justification": "La description mentionne explicitement la présence d'un mortier, de deux contrepoids (éléments essentiels d'un pressoir), et d'une pierre de fixation de jumelle (probablement liée à un système de pressurage).  Ces éléments, pris ensemble, constituent une forte indication d'une installation antique pour la production d'huile d'olive.  La céramique sigillée et les cailloux calcinés, bien que présents, ne sont pas aussi directement liés à un pressoir. Les tambours de colonnes sont des éléments architecturaux, mais ne prouvent pas à eux seuls l'existence d'un pressoir."
+        },
+        {
+            "question": "Quel élément, parmi ceux mentionnés, suggère le plus fortement la présence d'une structure antique sur le site archéologique N°050 CNSAMH ?",
+            "options": [
+                "La présence de céramique antique commune et sigillée.",
+                "La découverte d'un contrepoids en calcaire nummulitique noirâtre.",
+                "Les harpes en place et les alignements observés."
+            ],
+            "correct_answer": "Les harpes en place et les alignements observés.",
+            "justification": "Bien que la céramique et le contrepoids indiquent une occupation antique,  la description précise la présence de \"harpes en place et des alignements\".  Ces éléments architecturaux suggèrent plus directement une structure construite et organisée, caractéristique d'un site antique, contrairement à la céramique et au contrepoids qui pourraient être des éléments isolés ou dispersés sur une plus grande surface sans nécessairement indiquer une structure bâtie."
+        },
+        {
+            "question": "Quel élément architectural majeur, mis à part les bassins, est identifié sur le site archéologique n°163 CNSAMH à Sbiba ?",
+            "options": [
+                "Un temple romain",
+                "Une structure en opus africanum de 10,50 m x 15,20 m",
+                "Un complexe de thermes"
+            ],
+            "correct_answer": "Une structure en opus africanum de 10,50 m x 15,20 m",
+            "justification": "Le texte précise explicitement la présence d'une \"structure en opus africanum, occupant une petite éminence faisant 10,50 m / 15,20 m\".  Bien que des bassins soient mentionnés, la question demande l'élément majeur *outre* les bassins.  Il n'y a aucune mention de temple romain ou de thermes dans la description."
+        },
+        {
+            "question": "Quel type de vestiges archéologiques, en plus de la céramique, a été principalement découvert sur le site n°133 CNSAMH à Sidi El Zaïer El Arifi ?",
+            "options": [
+                "Des structures funéraires romaines et des mosaïques.",
+                "Des harpes en place et des alignements.",
+                "Des outils lithiques et des restes d'habitats préhistoriques."
+            ],
+            "correct_answer": "Des harpes en place et des alignements.",
+            "justification": "La description archéologique mentionne explicitement la présence de \"harpes en place\" et \"des alignements\" sur le site.  Les autres options ne sont pas mentionnées dans le texte fourni.  La présence de céramique est mentionnée, mais la question demande des vestiges *en plus* de la céramique."
+        },
+        {
+            "question": "Selon la description archéologique du site N° 048 CNSAMH, quelle est la caractéristique principale du bassin quadrangulaire découvert ?",
+            "options": [
+                "Il est construit en briques cuites et orienté est-ouest.",
+                "Il est construit en moellons liés à la chaux et orienté nord-sud, avec un mur occidental visible et des traces d'enduit étanche sur sa paroi orientale.",
+                "Il est construit en pierre calcaire et orienté nord-est, avec des auges intégrées."
+            ],
+            "correct_answer": "Il est construit en moellons liés à la chaux et orienté nord-sud, avec un mur occidental visible et des traces d'enduit étanche sur sa paroi orientale.",
+            "justification": "La description précise que le bassin est \"quadrangulaire orienté nord-sud dont on ne voit que le mur occidental\", qu'il est \"construit en moellons liés à la chaux\", et que \"Sur sa paroi orientale on voit les traces d'enduit étanche et un contrefort arrondi\".  Les autres options sont incorrectes car elles ne correspondent pas aux informations fournies dans le texte source."
+        },
+        {
+            "question": "En se basant sur la description archéologique du site n°121 CNSAMH, quelle est la principale conclusion concernant l'état actuel du site ?",
+            "options": [
+                "Le site est intact et riche en vestiges archéologiques.",
+                "Le site est partiellement détruit, mais des structures architecturales sont encore visibles.",
+                "Le site est totalement détruit, seuls quelques tessons de céramiques sigillées subsistent."
+            ],
+            "correct_answer": "Le site est totalement détruit, seuls quelques tessons de céramiques sigillées subsistent.",
+            "justification": "La description précise que le site est « totalement détruit par la mise en valeur du terrain ».  Seuls « quelques tessons de céramique sigillée » sont actuellement visibles.  Ceci réfute explicitement les deux autres options qui suggèrent un état de préservation plus important du site."
+        },
+        {
+            "question": "Sur le site archéologique n°097 CNSAMH près de Sbiba, quels éléments architecturaux antiques ont été principalement découverts ?",
+            "options": [
+                "Des mosaïques romaines et des sculptures en marbre.",
+                "Des fragments de colonnes en calcaire, une base de colonne et un fragment de bassin.",
+                "Des vestiges de murs en pierre sèche et des outils en silex."
+            ],
+            "correct_answer": "Des fragments de colonnes en calcaire, une base de colonne et un fragment de bassin.",
+            "justification": "La description archéologique mentionne explicitement la découverte de \"fragments de fûts de colonne en calcaire blanc\", d'une \"base de colonne en calcaire blanc\", et d'un \"fragment de bassin à paroi monolithe\".  Ces éléments sont directement cités comme étant présents sur le site.  Les autres options ne sont pas mentionnées dans la description fournie."
+        },
+        {
+            "question": "Selon la description archéologique du site N° 067 AAT2, quel élément témoigne le plus directement de la présence d'une huilerie romaine sur le site ?",
+            "options": [
+                "La présence d'un léger monticule en pente orienté vers l'est.",
+                "La présence de deux paires de jumelles de pressoir à deux trous.",
+                "La superficie du site de 1000 m²."
+            ],
+            "correct_answer": "La présence de deux paires de jumelles de pressoir à deux trous.",
+            "justification": "La description précise la présence de \"restes d'une huilerie écroulée\" et détaille les dimensions et caractéristiques de \"deux paires de jumelles de pressoir à deux trous\".  Ces jumelles sont des éléments clés d'un pressoir à huile, constituant ainsi la preuve la plus directe de l'activité oléicole sur le site.  Le monticule et la superficie du site sont des éléments contextuels, mais ne prouvent pas directement la présence d'une huilerie. "
+        },
+        {
+            "question": "Selon la description archéologique du site N°055 CNSAMH, à Beniet Draj, quelle est la structure principale mise au jour ?",
+            "options": [
+                "Les ruines d'un bâtiment résidentiel romain.",
+                "Les restes d'une citerne antique avec une voûte en berceau.",
+                "Les fondations d'un temple punique."
+            ],
+            "correct_answer": "Les restes d'une citerne antique avec une voûte en berceau.",
+            "justification": "Le texte indique explicitement que le site contient les \"ruines d'une voûte en berceau d'orientation nord-ouest sud-est, construite en maçonnerie (3,40 m / 490 m)\".  Il précise ensuite qu'il s'agit d'une \"partie de citerne détruite\".  Les autres éléments mentionnés (champ de pierraille, pierre à encoche, tuiles, céramique) sont des éléments associés, mais ne constituent pas la structure principale identifiée."
+        },
+        {
+            "question": "Selon la description archéologique du site N°055 CNSAMH, à Beniet Draj, quelle est la structure principale identifiée sur le site ?",
+            "options": [
+                "Un bâtiment résidentiel romain",
+                "Une partie d'une citerne antique",
+                "Un mausolée punique"
+            ],
+            "correct_answer": "Une partie d'une citerne antique",
+            "justification": "Le texte précise explicitement :  \"Il s'agit d'une partie de citerne détruite (fig. 198)\".  La description de la voûte en berceau, de la maçonnerie et de l'enduit étanche corrobore cette identification.  Les autres éléments mentionnés (champ de pierraille, pierre à encoche, tuiles et céramique) sont des éléments associés, mais ne constituent pas la structure principale identifiée."
+        }
+    ]
+}

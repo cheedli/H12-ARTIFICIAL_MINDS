@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restorica - Reconstructing Ancient Monuments</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    :root {
+      --light-brown: #C19A6B;
+      --dark-brown: #8B5A2B;
+      --cream: #f8f4e6;
+      --accent: #A67B5B;
+    }
+
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--cream);
+      color: var(--dark-brown);
+      overflow-x: hidden;
+    }
+
+    /* Floating Navigation Bar with Slide-Down Animation and Transition */
+    .nav-bar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 90%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-radius: 15px;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+      animation: slideDown 0.8s ease-out;
+    }
+    @keyframes slideDown {
+      from { transform: translate(-50%, -50px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .nav-bar h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--dark-brown);
+      display: flex;
+      align-items: center;
+    }
+    /* Logo replacing the letter "O" with a hover pulse effect */
+    .nav-bar .logo {
+      height: 1.5em;
+      vertical-align: middle;
+      margin: 0 0.2em;
+      transition: transform 0.3s ease;
+    }
+    .nav-bar .logo:hover {
+      animation: pulse 0.6s ease-in-out;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .menu-icon {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .menu-icon span {
+      width: 25px;
+      height: 3px;
+      background-color: var(--dark-brown);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    nav {
+      display: flex;
+      gap: 2rem;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--dark-brown);
+      font-size: 1.1rem;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: var(--dark-brown);
+      left: 0;
+      bottom: -4px;
+      transition: width 0.3s ease;
+    }
+    nav a:hover {
+      color: var(--accent);
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Header & Hero Section */
+    header {
+      position: relative;
+      background: var(--light-brown);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://www.transparenttextures.com/patterns/paper-1.png');
+      opacity: 0.2;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      padding: 0 1rem;
+      animation: fadeInUp 1s ease-out;
+      color: var(--cream);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    }
+    .hero-content p {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .hero-content .button {
+      background: var(--dark-brown);
+      color: var(--cream);
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
+      text-decoration: none;
+      border-radius: 30px;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .hero-content .button:hover {
+      background: var(--accent);
+      transform: scale(1.05);
+    }
+
+    /* Elements Default Animation State */
+    .section, .heritage, .exhibits-grid, .process-steps, .gallery-grid {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Sections */
+    .section {
+      padding: 4rem 2rem;
+      text-align: center;
+      background: var(--cream);
+      border-bottom: 1px solid #e0dcd0;
+    }
+    .section:nth-of-type(even) {
+      background: #faf6f1;
+    }
+    .section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      color: var(--dark-brown);
+    }
+    .section p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    /* Featured Exhibits Grid */
+    .exhibits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .exhibits-grid img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    .exhibits-grid img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Roman Heritage Section with Background Image */
+    .heritage {
+      position: relative;
+      background: url('https://source.unsplash.com/1600x900/?roman,architecture') no-repeat center center/cover;
+      color: var(--cream);
+      padding: 6rem 2rem;
+    }
+    .heritage::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 0;
+    }
+    .heritage-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Restoration Process Section */
+    .process-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .process-step {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+    .process-step img {
+      width: 300px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    .process-step img:hover {
+      transform: scale(1.05);
+    }
+    .process-step div {
+      flex: 1;
+      text-align: left;
+    }
+
+    /* Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .gallery-grid img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    .gallery-grid img:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--dark-brown);
+      color: var(--cream);
+      text-align: center;
+      padding: 2rem;
+      font-family: 'Roboto', sans-serif;
+    }
+    footer p { font-size: 1rem; }
+  </style>
+  <script>
+    // Toggle Mobile Menu
+    function toggleMenu() {
+      document.querySelector('.nav-bar').classList.toggle('show-menu');
+    }
+    
+    // Wait for the DOM to load before setting up scroll behavior
+    document.addEventListener("DOMContentLoaded", function() {
+      let lastScroll = window.pageYOffset || document.documentElement.scrollTop;
+      const navBar = document.querySelector('.nav-bar');
+      
+      window.addEventListener("scroll", function() {
+        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        if (currentScroll > lastScroll && currentScroll > 100) {
+          // Scrolling down: hide nav bar
+          navBar.style.transform = "translate(-50%, -100px)";
+        } else {
+          // Scrolling up: show nav bar
+          navBar.style.transform = "translate(-50%, 0)";
+        }
+        lastScroll = currentScroll;
+      });
+      
+      // Intersection Observer to reveal animated sections on scroll
+      const animatedElements = document.querySelectorAll(
+        '.section, .heritage, .exhibits-grid, .process-steps, .gallery-grid'
+      );
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      
+      animatedElements.forEach(el => observer.observe(el));
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <div class="nav-bar">
+      <!-- Replace the "O" in "Restorica" with a logo image -->
+      <h1>
+        Restorica
+      </h1>
+      <img src="{{ url_for('static', filename='images/logo1.png') }}" 
+     alt="Logo"
+     style="width: 50px; height: auto; float: left; margin-right: 700px;">
+
+      <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <nav>
+        <a href="/chatbot">SbiBot</a>
+        <a href="/ar">SbiLens</a>
+        <a href="/historical"> SbiMap</a>
+        <a href="/translate">SbiLingo</a>
+      </nav>
+    </div>
+    <div class="hero-content">
+      <h2>Reconstructing the Past</h2>
+      <p>
+        Experience history reimagined with minimalist elegance—where ancient monuments meet modern museology.
+      </p>
+      <a href="#exhibits" class="button">Explore Our Collection</a>
+    </div>
+  </header>
+  
+  <!-- About Section -->
+  <section id="about" class="section">
+    <h2>About Restorica</h2>
+    <p>
+      At Restorica, we blend cutting-edge technology with a deep respect for historical integrity. Our mission is to restore and preserve ancient monuments, presenting history with refined, museum-quality aesthetics.
+    </p>
+
+  </section>
+    <!-- SBIBa Ruins and Monuments Section -->
+    <section id="sbiba" class="section">
+      <h2>SBIBa Ruins and Monuments</h2>
+      <p>
+        Explore the ancient ruins and monuments of the SBIBa archaeological site. Our restoration efforts aim to preserve and showcase the historical significance of this remarkable location.
+      </p>
+      <div class="sbiba-grid">
+        <img src="https://via.placeholder.com/300x200?text=SBIBa+Ruins+1" alt="SBIBa Ruins 1">
+        <img src="https://via.placeholder.com/300x200?text=SBIBa+Ruins+2" alt="SBIBa Ruins 2">
+        <img src="https://via.placeholder.com/300x200?text=SBIBa+Monument+1" alt="SBIBa Monument 1">
+        <img src="https://via.placeholder.com/300x200?text=SBIBa+Monument+2" alt="SBIBa Monument 2">
+      </div>
+    </section>
+
+  <!-- Featured Exhibits Section -->
+  <section id="exhibits" class="section">
+    <h2>Gallery of SBIBa Monuments</h2>
+    <p>
+      Browse through our selection of images showcasing the timeless beauty of ancient Rome in the region of Sbiba. Our restoration efforts aim to preserve and showcase the historical significance of this remarkable location.
+    </p>
+    <div class="exhibits-grid">
+      <figure style="margin-bottom: 3em;">
+        <img src="{{ url_for('static', filename='images/DSCN2014.JPG') }}" 
+             alt="Exhibit 1" style="width: 400px; height: 300px;">
+        <figcaption>Le monument Jamâa Sidi Okba</figcaption>
+      </figure>
+      
+      <figure style="margin-bottom: 1em;">
+        <img src="{{ url_for('static', filename='images/1.PNG') }}" 
+             alt="Exhibit 2" style="width: 400px; height: 300px;">
+        <figcaption>Le nymphée de Sbiba</figcaption>
+      </figure>
+      
+      <figure style="margin-bottom: 1em;">
+        <img src="{{ url_for('static', filename='images/3.PNG') }}" 
+             alt="Exhibit 3" style="width: 400px; height: 300px;">
+        <figcaption>Les thermes de Sufes</figcaption>
+      </figure>      
+      
+    </div>
+  </section>
+ <!-- 
+  <section id="heritage" class="heritage">
+    <div class="heritage-content">
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 1rem;">
+        Roman Heritage
+      </h2>
+      <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto;">
+        Delve into the rich legacy of Roman art and architecture. Explore how ancient techniques and timeless designs continue to inspire modern restoration.
+      </p>
+    </div>
+  </section>
+  
+ 
+  <section id="process" class="section">
+    <h2>Restoration Process</h2>
+    <p>
+      Our step-by-step process ensures that every reconstruction is faithful to its original grandeur.
+    </p>
+    <div class="process-steps">
+      <div class="process-step">
+        <img src="https://via.placeholder.com/300x200?text=Survey" alt="Survey">
+        <div>
+          <h3>Survey &amp; Documentation</h3>
+          <p>
+            We begin by meticulously surveying the monument and documenting its current state using advanced techniques.
+          </p>
+        </div>
+      </div>
+      <div class="process-step">
+        <img src="https://via.placeholder.com/300x200?text=Restoration" alt="Restoration">
+        <div>
+          <h3>Restoration &amp; Reconstruction</h3>
+          <p>
+            Our team combines modern technology with traditional methods to restore the monument to its former glory.
+          </p>
+        </div>
+      </div>
+      <div class="process-step">
+        <img src="https://via.placeholder.com/300x200?text=Preservation" alt="Preservation">
+        <div>
+          <h3>Preservation &amp; Presentation</h3>
+          <p>
+            The final phase focuses on preserving the restored monument and presenting it in a museum-quality environment.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+  <section id="gallery" class="section">
+    <h2>Gallery</h2>
+    <p>
+      Browse through a curated selection of images showcasing our restoration projects and the timeless beauty of ancient Rome.
+    </p>
+    <div class="gallery-grid">
+      <img src="https://via.placeholder.com/200x150?text=Photo+1" alt="Photo 1">
+      <img src="https://via.placeholder.com/200x150?text=Photo+2" alt="Photo 2">
+      <img src="https://via.placeholder.com/200x150?text=Photo+3" alt="Photo 3">
+      <img src="https://via.placeholder.com/200x150?text=Photo+4" alt="Photo 4">
+      <img src="https://via.placeholder.com/200x150?text=Photo+5" alt="Photo 5">
+      <img src="https://via.placeholder.com/200x150?text=Photo+6" alt="Photo 6">
+    </div>
+  </section>
+  
+  
+  <section id="sbiba" class="section">
+    <h2>SBIBa Ruins and Monuments</h2>
+    <p>
+      Explore the ancient ruins and monuments of the SBIBa archaeological site. Our restoration efforts aim to preserve and showcase the historical significance of this remarkable location.
+    </p>
+    <div class="sbiba-grid">
+      <img src="https://via.placeholder.com/300x200?text=SBIBa+Ruins+1" alt="SBIBa Ruins 1">
+      <img src="https://via.placeholder.com/300x200?text=SBIBa+Ruins+2" alt="SBIBa Ruins 2">
+      <img src="https://via.placeholder.com/300x200?text=SBIBa+Monument+1" alt="SBIBa Monument 1">
+      <img src="https://via.placeholder.com/300x200?text=SBIBa+Monument+2" alt="SBIBa Monument 2">
+    </div>
+  </section>-->
+  
+  <!-- Contact Section -->
+  <section id="contact" class="section">
+    <h2>Contact Us</h2>
+    <p>
+      Have questions or want to learn more about our projects? Reach out to us and join our journey to revive history.
+    </p>
+    <p>Email: <a href="mailto:info@restorica.com" style="color: var(--dark-brown);">info@restorica.com</a></p>
+    <p>Phone: <a href="tel:+1234567890" style="color: var(--dark-brown);">+1 234 567 890</a></p>
+  </section>
+  
+  <footer>
+    <p>&copy; 2025 Restorica. All rights reserved. A timeless tribute to art and history.</p>
+  </footer>
+</body>
+</html>

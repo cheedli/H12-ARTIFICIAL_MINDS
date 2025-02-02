@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restorica - Reconstructing Ancient Monuments</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* Variables & Global Reset */
+    :root {
+      --light-brown: #C19A6B;
+      --dark-brown: #8B5A2B;
+      --cream: #f8f4e6;
+      --accent: #A67B5B;
+      --chat-bg: #fdf8ec;
+      --chat-border: #c2a477;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--cream);
+      color: var(--dark-brown);
+      overflow-x: hidden;
+      /* Prevent content hiding under fixed nav */
+      padding-top: 100px;
+    }
+
+    /* Navigation Bar */
+    .nav-bar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-radius: 15px;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+      animation: slideDown 0.8s ease-out;
+    }
+    @keyframes slideDown {
+      from { transform: translateX(-50%) translateY(-50px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+    .nav-bar h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--dark-brown);
+    }
+    nav { display: flex; gap: 2rem; }
+    nav a {
+      text-decoration: none;
+      color: var(--dark-brown);
+      font-size: 1.1rem;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: var(--dark-brown);
+      left: 0;
+      bottom: -4px;
+      transition: width 0.3s ease;
+    }
+    nav a:hover {
+      color: var(--accent);
+    }
+    nav a:hover::after { width: 100%; }
+
+    /* Hero Section */
+    header {
+      position: relative;
+      background: var(--light-brown);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://www.transparenttextures.com/patterns/paper-1.png');
+      opacity: 0.2;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      padding: 0 1rem;
+      animation: fadeInUp 1s ease-out;
+      color: var(--cream);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    }
+    .hero-content p {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .hero-content .button {
+      background: var(--dark-brown);
+      color: var(--cream);
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
+      text-decoration: none;
+      border-radius: 30px;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .hero-content .button:hover {
+      background: var(--accent);
+      transform: scale(1.05);
+    }
+
+    /* Chat Container */
+    .chat-container {
+      max-width: 700px;
+      width: 100%;
+      background: var(--chat-bg);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border: 2px solid var(--chat-border);
+      margin: 2rem auto;
+      animation: slideIn 0.8s ease-out;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .chat-header {
+      text-align: center;
+      font-size: 1.8em;
+      font-weight: bold;
+      color: var(--dark-brown);
+      margin-bottom: 15px;
+    }
+    .chat-box {
+      height: 450px;
+      overflow-y: auto;
+      padding: 10px;
+      border-radius: 8px;
+      background: #f8f1e4;
+      border: 1px solid var(--chat-border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .article {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid var(--dark-brown);
+      max-width: 65%;
+      font-size: 0.9rem;
+      align-self: flex-start;
+    }
+    .user-message {
+      align-self: flex-end;
+      border-left: none;
+      border-right: 4px solid var(--dark-brown);
+      background: #e8d5b7;
+    }
+    .input-container {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+    }
+    .input-container input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--chat-border);
+      outline: none;
+      font-size: 0.9rem;
+      background: var(--chat-bg);
+    }
+    .input-container button {
+      padding: 10px;
+      background: var(--dark-brown);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-left: 5px;
+      font-size: 0.9rem;
+    }
+    .input-container button:hover { background: #6b4125; }
+    .play-icon {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark-brown);
+      color: var(--cream);
+      text-align: center;
+      padding: 2rem;
+      font-family: 'Roboto', sans-serif;
+    }
+    footer p { font-size: 1rem; }
+  </style>
+  <script>
+    // Toggle Mobile Menu (if you add one later)
+    function toggleMenu() {
+      document.querySelector('.nav-bar').classList.toggle('show-menu');
+    }
+    // Nav bar hide on scroll & reveal animated sections
+    document.addEventListener("DOMContentLoaded", function() {
+      let lastScroll = window.pageYOffset;
+      const navBar = document.querySelector('.nav-bar');
+      window.addEventListener("scroll", function() {
+        let currentScroll = window.pageYOffset;
+        if (currentScroll > lastScroll && currentScroll > 100) {
+          navBar.style.transform = "translate(-50%, -100px)";
+        } else {
+          navBar.style.transform = "translate(-50%, 0)";
+        }
+        lastScroll = currentScroll;
+      });
+      
+      // (Optional) Intersection Observer for other animated sections
+      const animatedElements = document.querySelectorAll(
+        '.section, .heritage, .exhibits-grid, .process-steps, .gallery-grid'
+      );
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      animatedElements.forEach(el => observer.observe(el));
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <div class="nav-bar">
+      <h1>Restorica</h1>
+      <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <nav>
+        <a href="/chatbot">SbiBot</a>
+        <a href="/ar">SbiLens</a>
+        <a href="/historical">SbiMap</a>
+        <a href="/translate">SbiLingo</a>
+      </nav>
+    </div>
+   
+  </header>
+
+  <main>
+    <section id="chat">
+      <div class="chat-container">
+        <div class="chat-header">Sbiba Archaeology Chatbot</div>
+        <div class="chat-box" id="chat-box"></div>
+        <div class="input-container">
+          <div class="input-wrapper">
+            <input type="text" id="user-input" placeholder="Ask about Sbiba's history..." />
+            <button onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Additional sections can be added here -->
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Restorica. All rights reserved. A timeless tribute to art and history.</p>
+  </footer>
+
+  <script>
+    async function sendMessage() {
+      const inputField = document.getElementById("user-input");
+      const chatBox = document.getElementById("chat-box");
+      let userMessage = inputField.value.trim();
+      if (userMessage === "") return;
+
+      // Display user's message
+      const userDiv = document.createElement("div");
+      userDiv.classList.add("article", "user-message");
+      userDiv.innerHTML = `<div class="article-content">${userMessage}</div>`;
+      chatBox.appendChild(userDiv);
+      inputField.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Send request to server
+      const response = await fetch("/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: userMessage })
+      });
+      const data = await response.json();
+      
+      const botDiv = document.createElement("div");
+      botDiv.classList.add("article");
+      let botContent = `<div class="article-content">${data.response}</div>`;
+      if (data.images && data.images.length > 0) {
+        botContent += `<div class="article-images" style="margin-top:10px;">`;
+        data.images.forEach(imageObj => {
+          botContent += `
+            <div class="image-container" style="margin-bottom:10px;">
+              <img src="extracted_images/${imageObj.url}" alt="Archaeological Site Image" style="max-width:100%;" />
+              <div class="image-caption" style="font-size:0.8rem; color:#555;">${imageObj.caption}</div>
+            </div>`;
+        });
+        botContent += `</div>`;
+      }
+      botDiv.innerHTML = botContent;
+      chatBox.appendChild(botDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // If audio is available, add a play icon
+      if (data.audio_url) {
+    const audioElem = document.createElement("audio");
+    audioElem.src = "/audio"; 
+    audioElem.style.display = "none";  
+    botDiv.appendChild(audioElem); 
+
+    const playIcon = document.createElement("img");
+    playIcon.src = `/static/play_icon.png`;
+    playIcon.alt = "Play Audio";
+    playIcon.classList.add("play-icon");
+
+    playIcon.addEventListener("click", () => {
+        console.log("Play icon clicked! Playing audio...");
+        audioElem.play();
+    });
+
+    botDiv.appendChild(playIcon);
+    console.log("Play icon appended successfully!");
+}
+
+
+    }
+  </script>
+</body>
+</html>

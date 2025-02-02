@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restorica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    :root {
+      --light-brown: #C19A6B;
+      --dark-brown: #8B5A2B;
+      --cream: #f8f4e6;
+      --accent: #A67B5B;
+    }
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--cream);
+      color: var(--dark-brown);
+      overflow-x: hidden;
+    }
+    /* Floating Navigation Bar with Slide-Down Animation */
+    .nav-bar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 90%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-radius: 15px;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+      animation: slideDown 0.8s ease-out;
+    }
+    @keyframes slideDown {
+      from { transform: translate(-50%, -50px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .nav-bar h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--dark-brown);
+    }
+    .menu-icon {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .menu-icon span {
+      width: 25px;
+      height: 3px;
+      background-color: var(--dark-brown);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    nav {
+      display: flex;
+      gap: 2rem;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--dark-brown);
+      font-size: 1.1rem;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: var(--dark-brown);
+      left: 0;
+      bottom: -4px;
+      transition: width 0.3s ease;
+    }
+    nav a:hover {
+      color: var(--accent);
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    /* Header & Hero Section */
+    header {
+      position: relative;
+      background: var(--light-brown);
+      height: 50vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      padding-top: 80px; /* space for the fixed nav bar */
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://www.transparenttextures.com/patterns/paper-1.png');
+      opacity: 0.2;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      padding: 0 1rem;
+      animation: fadeInUp 1s ease-out;
+      color: var(--cream);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .hero-content p {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    /* Sections */
+    .section {
+      padding: 4rem 2rem;
+      text-align: center;
+      background: var(--cream);
+      border-bottom: 1px solid #e0dcd0;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      color: var(--dark-brown);
+    }
+    .section p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 800px;
+      margin: 0 auto 1.5rem;
+    }
+    /* Button Style */
+    .button {
+      background: var(--dark-brown);
+      color: var(--cream);
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
+      text-decoration: none;
+      border-radius: 30px;
+      transition: background 0.3s ease, transform 0.3s ease;
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+    }
+    .button:hover {
+      background: var(--accent);
+      transform: scale(1.05);
+    }
+    /* Quiz Options */
+    #quiz-container button {
+      background: var(--cream);
+      border: 2px solid var(--dark-brown);
+      color: var(--dark-brown);
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 30px;
+      margin: 0.5rem;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    #quiz-container button:hover {
+      background: var(--light-brown);
+      transform: scale(1.03);
+    }
+    /* Improved Response Design */
+    .result-message {
+      margin-top: 1.5rem;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      font-size: 1.1rem;
+      animation: fadeIn 0.5s ease-out;
+    }
+    .result-message.correct {
+      background: #e0f8e9;
+      border-left: 5px solid #4caf50;
+      color: #2e7d32;
+    }
+    .result-message.incorrect {
+      background: #fdecea;
+      border-left: 5px solid #f44336;
+      color: #c62828;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Footer */
+    footer {
+      background: var(--dark-brown);
+      color: var(--cream);
+      text-align: center;
+      padding: 2rem;
+      font-family: 'Roboto', sans-serif;
+    }
+    footer p {
+      font-size: 1rem;
+    }
+    /* Responsive Menu Icon */
+    @media (max-width: 768px) {
+      .menu-icon {
+        display: flex;
+      }
+      nav {
+        display: none;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .nav-bar.show-menu nav {
+        display: flex;
+      }
+    }
+  </style>
+  <script>
+    // Toggle Mobile Menu
+    function toggleMenu() {
+      document.querySelector('.nav-bar').classList.toggle('show-menu');
+    }
+    
+    // Quiz answer checker function with improved response display
+    function checkAnswer(selectedOption, correctAnswer, justification) {
+      fetch("/check_answer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          selected_option: selectedOption,
+          correct_answer: correctAnswer,
+          justification: justification
+        })
+      })
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error("Erreur réseau");
+        }
+        return response.json();
+      })
+      .then(function(data) {
+        var resultDiv = document.getElementById("result");
+        // Clear any previous messages
+        resultDiv.innerHTML = "";
+        // Create a container for the result message
+        var message = document.createElement("div");
+        message.classList.add("result-message");
+        if (data.correct) {
+          message.classList.add("correct");
+          message.innerHTML = "<strong>Bonne réponse ! ✅</strong><br><em>Justification:</em> " + data.justification;
+        } else {
+          message.classList.add("incorrect");
+          message.innerHTML = "<strong>Mauvaise réponse ❌</strong><br><em>Justification:</em> " + data.justification;
+        }
+        resultDiv.appendChild(message);
+      })
+      .catch(function(error) {
+        console.error("Error:", error);
+      });
+    }
+
+    // Intersection Observer to reveal sections on scroll
+    document.addEventListener("DOMContentLoaded", function() {
+      const animatedElements = document.querySelectorAll('.section');
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      animatedElements.forEach(el => observer.observe(el));
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <div class="nav-bar">
+      <h1>Restorica</h1>
+      <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <nav>
+        <a href="/">Accueil</a>
+        <a href="/quiz">Quiz</a>
+        <a href="/about">À Propos</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+    <div class="hero-content">
+      <h2>Testez vos connaissances en archéologie</h2>
+      <p>Découvrez des questions fascinantes sur l'histoire et les civilisations antiques.</p>
+    </div>
+  </header>
+
+  <!-- Quiz Section -->
+  <section id="quiz" class="section">
+    <div id="quiz-container">
+      <p><strong>{{ question.question }}</strong></p>
+      <!-- Templating loop for quiz options (e.g., Flask/Jinja2 syntax) -->
+      {% for option in question.options %}
+        <button onclick='checkAnswer({{ option | tojson }}, {{ question.correct_answer | tojson }}, {{ question.justification | tojson }})'>
+          {{ option }}
+        </button>
+      {% endfor %}
+      <div id="result"></div>
+      <hr style="margin: 2rem 0;">
+      <a href="/quiz" class="button">🔄 Nouvelle Question</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Quiz Archéologique. Tous droits réservés.</p>
+  </footer>
+</body>
+</html>

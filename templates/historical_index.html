@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restorica - Reconstructing Ancient Monuments</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/leaflet.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/L.Control.Layers.Tree.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/L.Control.Locate.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/qgis2web.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/fontawesome-all.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/MarkerCluster.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/MarkerCluster.Default.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/leaflet-search.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/filter.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/nouislider.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/leaflet-control-geocoder.Geocoder.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/leaflet-measure.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css1/all.min.css">
+
+
+  <style>
+html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#map {
+    width: 50%;
+    height: 50%;
+    border-radius: 15px; /* adjust the value to your taste */
+    overflow: hidden;    /* ensures the map content respects the rounded corners */
+}
+
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .chat-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        #chat-box {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #fafafa;
+            text-align: left;
+        }
+
+        input {
+            width: 75%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 5px;
+        }
+
+        button:hover {
+            background: darkblue;
+        }
+    </style>
+ 
+ <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    :root {
+      --light-brown: #C19A6B;
+      --dark-brown: #8B5A2B;
+      --cream: #f8f4e6;
+      --accent: #A67B5B;
+    }
+
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--cream);
+      color: var(--dark-brown);
+      overflow-x: hidden;
+    }
+
+    /* Floating Navigation Bar with Slide-Down Animation and Transition */
+    .nav-bar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 90%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-radius: 15px;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+      animation: slideDown 0.8s ease-out;
+    }
+    @keyframes slideDown {
+      from { transform: translate(-50%, -50px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .nav-bar h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--dark-brown);
+      display: flex;
+      align-items: center;
+    }
+    /* Logo replacing the letter "O" with a hover pulse effect */
+    .nav-bar .logo {
+      height: 1.5em;
+      vertical-align: middle;
+      margin: 0 0.2em;
+      transition: transform 0.3s ease;
+    }
+    .nav-bar .logo:hover {
+      animation: pulse 0.6s ease-in-out;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .menu-icon {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .menu-icon span {
+      width: 25px;
+      height: 3px;
+      background-color: var(--dark-brown);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    nav {
+      display: flex;
+      gap: 2rem;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--dark-brown);
+      font-size: 1.1rem;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: var(--dark-brown);
+      left: 0;
+      bottom: -4px;
+      transition: width 0.3s ease;
+    }
+    nav a:hover {
+      color: var(--accent);
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Header & Hero Section */
+    header {
+      position: relative;
+      background: var(--light-brown);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://www.transparenttextures.com/patterns/paper-1.png');
+      opacity: 0.2;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      padding: 0 1rem;
+      animation: fadeInUp 1s ease-out;
+      color: var(--cream);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    }
+    .hero-content p {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .hero-content .button {
+      background: var(--dark-brown);
+      color: var(--cream);
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
+      text-decoration: none;
+      border-radius: 30px;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .hero-content .button:hover {
+      background: var(--accent);
+      transform: scale(1.05);
+    }
+
+    /* Elements Default Animation State */
+    .section, .heritage, .exhibits-grid, .process-steps, .gallery-grid {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Sections */
+    .section {
+      padding: 4rem 2rem;
+      text-align: center;
+      background: var(--cream);
+      border-bottom: 1px solid #e0dcd0;
+    }
+    .section:nth-of-type(even) {
+      background: #faf6f1;
+    }
+    .section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      color: var(--dark-brown);
+    }
+    .section p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    /* Featured Exhibits Grid */
+    .exhibits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .exhibits-grid img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    .exhibits-grid img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Roman Heritage Section with Background Image */
+    .heritage {
+      position: relative;
+      background: url('https://source.unsplash.com/1600x900/?roman,architecture') no-repeat center center/cover;
+      color: var(--cream);
+      padding: 6rem 2rem;
+    }
+    .heritage::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 0;
+    }
+    .heritage-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Restoration Process Section */
+    .process-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .process-step {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+    .process-step img {
+      width: 300px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    .process-step img:hover {
+      transform: scale(1.05);
+    }
+    .process-step div {
+      flex: 1;
+      text-align: left;
+    }
+
+    /* Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .gallery-grid img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    .gallery-grid img:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--dark-brown);
+      color: var(--cream);
+      text-align: center;
+      padding: 2rem;
+      font-family: 'Roboto', sans-serif;
+    }
+    footer p { font-size: 1rem; }
+  </style>
+  <script>
+    // Toggle Mobile Menu
+    function toggleMenu() {
+      document.querySelector('.nav-bar').classList.toggle('show-menu');
+    }
+    
+    // Wait for the DOM to load before setting up scroll behavior
+    document.addEventListener("DOMContentLoaded", function() {
+      let lastScroll = window.pageYOffset || document.documentElement.scrollTop;
+      const navBar = document.querySelector('.nav-bar');
+      
+      window.addEventListener("scroll", function() {
+        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        if (currentScroll > lastScroll && currentScroll > 100) {
+          // Scrolling down: hide nav bar
+          navBar.style.transform = "translate(-50%, -100px)";
+        } else {
+          // Scrolling up: show nav bar
+          navBar.style.transform = "translate(-50%, 0)";
+        }
+        lastScroll = currentScroll;
+      });
+      
+      // Intersection Observer to reveal animated sections on scroll
+      const animatedElements = document.querySelectorAll(
+        '.section, .heritage, .exhibits-grid, .process-steps, .gallery-grid'
+      );
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      
+      animatedElements.forEach(el => observer.observe(el));
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <div class="nav-bar">
+      <!-- Replace the "O" in "Restorica" with a logo image -->
+      <h1>
+        Restorica
+      </h1>
+      <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <nav>
+        <a href="/chatbot">SbiBot</a>
+        <a href="/ar">SbiLens</a>
+        <a href="/historical"> SbiMap</a>
+        <a href="/translate">SbiLingo</a>
+     
+      </nav>
+    </div>
+    
+  </header>
+    <div class="chat-container">
+        <h2>  Votre guide touristique 🗺️ </h2>
+        <div id="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Avez vous des questions ? ">
+        <button onclick="sendMessage()">Envoyer</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            let userInput = document.getElementById("user-input").value;
+            if (!userInput) return;
+
+            let chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `<p><strong>Vous:</strong> ${userInput}</p>`;
+
+            fetch("/historical_chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.response) {
+                    chatBox.innerHTML += `<p><strong>Assistant:</strong> ${data.response}</p>`;
+                } else {
+                    chatBox.innerHTML += `<p><strong>Erreur:</strong> ${data.error}</p>`;
+                }
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(error => {
+                console.error("Erreur:", error);
+                chatBox.innerHTML += `<p><strong>Erreur:</strong> Impossible de contacter le serveur.</p>`;
+            });
+
+            document.getElementById("user-input").value = "";
+        }
+    </script>
+
+<div id="map">
+</div>
+<script src="{{ url_for('static', filename='js1/qgis2web_expressions.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/leaflet.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/L.Control.Layers.Tree.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/L.Control.Locate.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/leaflet.rotatedMarker.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/leaflet.pattern.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/leaflet-hash.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/Autolinker.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/rbush.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/labelgun.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/labels.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/leaflet-control-geocoder.Geocoder.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/leaflet-measure.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/leaflet.markercluster.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/leaflet-search.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/tailDT.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/nouislider.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js1/wNumb.js') }}"></script>
+<script src="{{ url_for('static', filename='data/Trameurbainedelavilledesufes_1.js') }}"></script>
+<script src="{{ url_for('static', filename='data/Lesruines_2.js') }}"></script>
+
+<script>
+var highlightLayer;
+function highlightFeature(e) {
+    highlightLayer = e.target;
+
+    if (e.target.feature.geometry.type === 'LineString' || e.target.feature.geometry.type === 'MultiLineString') {
+      highlightLayer.setStyle({
+        color: '#ffff00',
+      });
+    } else {
+      highlightLayer.setStyle({
+        fillColor: '#ffff00',
+        fillOpacity: 1
+      });
+    }
+    highlightLayer.openPopup();
+}
+var map = L.map('map', {
+    zoomControl:false, maxZoom:28, minZoom:1
+}).fitBounds([[35.53308649621754,9.056607049722919],[35.560074938565684,9.106166183439603]]);
+var hash = new L.Hash(map);
+map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+// remove popup's row if "visible-with-data"
+function removeEmptyRowsFromPopupContent(content, feature) {
+ var tempDiv = document.createElement('div');
+ tempDiv.innerHTML = content;
+ var rows = tempDiv.querySelectorAll('tr');
+ for (var i = 0; i < rows.length; i++) {
+     var td = rows[i].querySelector('td.visible-with-data');
+     var key = td ? td.id : '';
+     if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+         rows[i].parentNode.removeChild(rows[i]);
+     }
+ }
+ return tempDiv.innerHTML;
+}
+function addClassToPopupIfMedia(content, popup) {
+var tempDiv = document.createElement('div');
+tempDiv.innerHTML = content;
+if (tempDiv.querySelector('td img')) {
+popup._contentNode.classList.add('media');
+// Delay to force the redraw
+setTimeout(function() {
+    popup.update();
+}, 10);
+} else {
+popup._contentNode.classList.remove('media');
+}
+}
+
+// Fonction pour garder le popup ouvert après le clic
+function keepPopupOpen(layer) {
+layer.off('mouseout'); // Désactive la fermeture automatique du popup
+}
+
+var zoomControl = L.control.zoom({
+position: 'topleft'
+}).addTo(map);
+
+L.control.locate({ locateOptions: { maxZoom: 19 } }).addTo(map);
+
+var measureControl = new L.Control.Measure({
+position: 'topleft',
+primaryLengthUnit: 'feet',
+secondaryLengthUnit: 'miles',
+primaryAreaUnit: 'sqfeet',
+secondaryAreaUnit: 'sqmiles'
+});
+measureControl.addTo(map);
+
+document.getElementsByClassName('leaflet-control-measure-toggle')[0].innerHTML = '';
+document.getElementsByClassName('leaflet-control-measure-toggle')[0].className += ' fas fa-ruler';
+
+var bounds_group = new L.featureGroup([]);
+
+function setBounds() {
+map.setMaxBounds(map.getBounds());
+}
+
+map.createPane('pane_new_0');
+map.getPane('pane_new_0').style.zIndex = 400;
+var layer_new_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+pane: 'pane_new_0',
+opacity: 1.0,
+attribution: '',
+minZoom: 1,
+maxZoom: 28,
+minNativeZoom: 0,
+maxNativeZoom: 18
+});
+map.addLayer(layer_new_0);
+
+function pop_Trameurbainedelavilledesufes_1(feature, layer) {
+layer.on({
+mouseover: highlightFeature,
+click: function(e) {
+    keepPopupOpen(layer);
+}
+});
+var popupContent = '<table>' +
+'<tr><td colspan="2"><strong>Name</strong><br />' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td></tr>' +
+'<tr><td colspan="2"><strong>description</strong><br />' + (feature.properties['description'] !== null ? autolinker.link(feature.properties['description'].toLocaleString()) : '') + '</td></tr>' +
+'<tr><td colspan="2"><strong>icon</strong><br />' + (feature.properties['icon'] !== null ? autolinker.link(feature.properties['icon'].toLocaleString()) : '') + '</td></tr>' +
+
+'</table>';
+var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+layer.on('popupopen', function(e) {
+addClassToPopupIfMedia(content, e.popup);
+});
+layer.bindPopup(content, { maxHeight: 400 });
+}
+
+map.createPane('pane_Trameurbainedelavilledesufes_1');
+map.getPane('pane_Trameurbainedelavilledesufes_1').style.zIndex = 401;
+map.getPane('pane_Trameurbainedelavilledesufes_1').style['mix-blend-mode'] = 'normal';
+var layer_Trameurbainedelavilledesufes_1 = new L.geoJson(json_Trameurbainedelavilledesufes_1, {
+attribution: '',
+interactive: false,
+dataVar: 'json_Trameurbainedelavilledesufes_1',
+layerName: 'layer_Trameurbainedelavilledesufes_1',
+pane: 'pane_Trameurbainedelavilledesufes_1',
+onEachFeature: pop_Trameurbainedelavilledesufes_1,
+style: function() {
+return {
+    pane: 'pane_Trameurbainedelavilledesufes_1',
+    opacity: 1,
+    color: 'rgba(255,230,16,1.0)',
+    dashArray: '',
+    lineCap: 'square',
+    lineJoin: 'bevel',
+    weight: 6.0,
+    fillOpacity: 0,
+    interactive: false
+};
+}
+});
+
+bounds_group.addLayer(layer_Trameurbainedelavilledesufes_1);
+map.addLayer(layer_Trameurbainedelavilledesufes_1);
+
+function pop_Lesruines_2(feature, layer) {
+    layer.on({
+        mouseout: function(e) {
+            keepPopupOpen(layer);
+            for (var i in e.target._eventParents) {
+                if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                    e.target._eventParents[i].resetStyle(e.target);
+                }
+            }
+            if (typeof layer.closePopup == 'function') {
+                layer.closePopup();
+            } else {
+                layer.eachLayer(function(feature){
+                    feature.closePopup()
+                });
+            }
+        },
+        mouseover: highlightFeature,
+    });
+    var popupContent = '<table>\
+    <tr>\
+        <td colspan="2"><strong>Name</strong><br />' + 
+        (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + 
+        '</td>\
+    </tr>\
+    <tr>\
+        <td colspan="2"><strong>Description</strong><br />' + 
+        (feature.properties['description'] !== null ? autolinker.link(feature.properties['description'].toLocaleString()) : '') + 
+        '</td>\
+    </tr>\
+    <tr>\
+        <td colspan="2"><strong>Old Image</strong><br />' + 
+        (feature.properties['image_path_old'] !== null ? 
+        '<img src="' + feature.properties['image_path_old']
+            .replace(/^.*\\static\\/, '/static/') // Récupérer le chemin relatif à partir du dossier static
+            .replace(/\\/g, '/')                 // Remplacer les antislashs par des slashes pour le web
+        + '" alt="Image" style="max-width:300px; max-height:300px;"/>' 
+        : 'No image available') + 
+        '</td>\
+    </tr>\
+    <tr>\
+        <td colspan="2"><strong>New Image</strong><br />' + 
+        (feature.properties['image_path_new'] !== null ? 
+        '<img src="' + feature.properties['image_path_new']
+            .replace(/^.*\\static\\/, '/static/') // Récupérer le chemin relatif à partir du dossier static
+            .replace(/\\/g, '/')                 // Remplacer les antislashs par des slashes pour le web
+        + '" alt="Image" style="max-width:300px; max-height:300px;"/>' 
+        : 'No image available') + 
+        '</td>\
+    </tr>\
+</table>';
+
+    var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+layer.on('popupopen', function(e) {
+addClassToPopupIfMedia(content, e.popup);
+});
+layer.bindPopup(content, { maxHeight: 400 });
+}
+
+function style_Lesruines_2_0() {
+    return {
+        pane: 'pane_Lesruines_2',
+        radius: 18.0, // Augmenter légèrement la taille pour une meilleure visibilité
+        opacity: 0.9, // Légèrement transparent pour un effet plus esthétique
+        color: 'rgba(50,50,50,0.8)', // Un gris plus doux pour éviter un contraste trop fort
+        dashArray: '3, 3', // Ajouter un léger effet de pointillé
+        lineCap: 'round', // Arrondir les extrémités pour un rendu plus fluide
+        lineJoin: 'round', // Arrondir les jonctions pour plus de douceur
+        weight: 2, // Augmenter légèrement l'épaisseur de la bordure
+        fill: true,
+        fillOpacity: 0.8, // Légèrement transparent pour une meilleure intégration
+        fillColor: 'rgba(255,69,0,0.9)', // Rouge orangé plus doux pour une meilleure visibilité
+        interactive: true,
+    }
+}
+
+
+
+
+
+map.createPane('pane_Lesruines_2');
+map.getPane('pane_Lesruines_2').style.zIndex = 402;
+map.getPane('pane_Lesruines_2').style['mix-blend-mode'] = 'normal';
+var layer_Lesruines_2 = new L.geoJson(json_Lesruines_2, {
+    attribution: '',
+    interactive: true,
+    dataVar: 'json_Lesruines_2',
+    layerName: 'layer_Lesruines_2',
+    pane: 'pane_Lesruines_2',
+    onEachFeature: pop_Lesruines_2,
+    pointToLayer: function (feature, latlng) {
+        var context = {
+            feature: feature,
+            variables: {}
+        };
+        return L.circleMarker(latlng, style_Lesruines_2_0(feature));
+    },
+});
+var cluster_Lesruines_2 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+    spiderfyDistanceMultiplier: 2});
+cluster_Lesruines_2.addLayer(layer_Lesruines_2);
+
+bounds_group.addLayer(layer_Lesruines_2);
+cluster_Lesruines_2.addTo(map);
+var osmGeocoder = new L.Control.Geocoder({
+    collapsed: true,
+    position: 'topleft',
+    text: 'Search',
+    title: 'Testing'
+}).addTo(map);
+document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+.className += ' fa fa-search';
+document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+.title += 'Search for a place';
+var overlaysTree = [
+    {label: '<img src="static/legend/Lesruines_2.png" /> Sbiba', layer: cluster_Lesruines_2},
+    {label: '<img src="static/legend/Trameurbainedelavilledesufes_1.png" /> Sbiba', layer: layer_Trameurbainedelavilledesufes_1},
+    {label: "new", layer: layer_new_0},]
+var lay = L.control.layers.tree(null, overlaysTree,{
+    collapsed: false, 
+});
+lay.addTo(map);
+document.addEventListener("DOMContentLoaded", function() {
+    // set new Layers List height which considers toggle icon
+    function newLayersListHeight() {
+        var layerScrollbarElement = document.querySelector('.leaflet-control-layers-scrollbar');
+        if (layerScrollbarElement) {
+            var layersListElement = document.querySelector('.leaflet-control-layers-list');
+            var originalHeight = layersListElement.style.height 
+                || window.getComputedStyle(layersListElement).height;
+            var newHeight = parseFloat(originalHeight) - 50;
+            layersListElement.style.height = newHeight + 'px';
+        }
+    }
+    var isLayersListExpanded = true;
+    var controlLayersElement = document.querySelector('.leaflet-control-layers');
+    var toggleLayerControl = document.querySelector('.leaflet-control-layers-toggle');
+    // toggle Collapsed/Expanded and apply new Layers List height
+    toggleLayerControl.addEventListener('click', function() {
+        if (isLayersListExpanded) {
+            controlLayersElement.classList.remove('leaflet-control-layers-expanded');
+        } else {
+            controlLayersElement.classList.add('leaflet-control-layers-expanded');
+        }
+        isLayersListExpanded = !isLayersListExpanded;
+        newLayersListHeight()
+    });	
+// apply new Layers List height if toggle layerstree
+if (controlLayersElement) {
+controlLayersElement.addEventListener('click', function(event) {
+  var toggleLayerHeaderPointer = event.target.closest('.leaflet-layerstree-header-pointer span');
+  if (toggleLayerHeaderPointer) {
+    newLayersListHeight();
+  }
+});
+}
+    // Collapsed/Expanded at Start to apply new height
+    setTimeout(function() {
+        toggleLayerControl.click();
+    }, 10);
+    setTimeout(function() {
+        toggleLayerControl.click();
+    }, 10);
+    // Collapsed touch/small screen
+    var isSmallScreen = window.innerWidth < 650;
+    if (isSmallScreen) {
+        setTimeout(function() {
+            controlLayersElement.classList.remove('leaflet-control-layers-expanded');
+            isLayersListExpanded = !isLayersListExpanded;
+        }, 500);
+    }  
+});       
+setBounds();
+map.addControl(new L.Control.Search({
+    layer: cluster_Lesruines_2,
+    initial: false,
+    hideMarkerOnCollapse: true,
+    propertyName: 'description'}));
+document.getElementsByClassName('search-button')[0].className +=
+ ' fa fa-binoculars';
+var mapDiv = document.getElementById('map');
+var row = document.createElement('div');
+row.className="row";
+row.id="all";
+row.style.height = "100%";
+var col1 = document.createElement('div');
+col1.className="col9";
+col1.id = "mapWindow";
+col1.style.height = "99%";
+col1.style.width = "80%";
+col1.style.display = "inline-block";
+var col2 = document.createElement('div');
+col2.className="col3";
+col2.id = "menu";
+col2.style.display = "inline-block";
+mapDiv.parentNode.insertBefore(row, mapDiv);
+document.getElementById("all").appendChild(col1);
+document.getElementById("all").appendChild(col2);
+col1.appendChild(mapDiv)
+var Filters = {"Name": "str"};
+function filterFunc() {
+  map.eachLayer(function(lyr){
+  if ("options" in lyr && "dataVar" in lyr["options"]){
+    features = this[lyr["options"]["dataVar"]].features.slice(0);
+    try{
+      for (key in Filters){
+        keyS = key.replace(/[^a-zA-Z0-9_]/g, "")
+        if (Filters[key] == "str" || Filters[key] == "bool"){
+          var selection = [];
+          var options = document.getElementById("sel_" + keyS).options
+          for (var i=0; i < options.length; i++) {
+            if (options[i].selected) selection.push(options[i].value);
+          }
+            try{
+              if (key in features[0].properties){
+                for (i = features.length - 1;
+                  i >= 0; --i){
+                  if (selection.indexOf(
+                  features[i].properties[key])<0
+                  && selection.length>0) {
+                  features.splice(i,1);
+                  }
+                }
+              }
+            } catch(err){
+          }
+        }
+        if (Filters[key] == "int"){
+          sliderVals =  document.getElementById(
+            "div_" + keyS).noUiSlider.get();
+          try{
+            if (key in features[0].properties){
+            for (i = features.length - 1; i >= 0; --i){
+              if (parseInt(features[i].properties[key])
+                  < sliderVals[0]
+                  || parseInt(features[i].properties[key])
+                  > sliderVals[1]){
+                    features.splice(i,1);
+                  }
+                }
+              }
+            } catch(err){
+            }
+          }
+        if (Filters[key] == "real"){
+          sliderVals =  document.getElementById(
+            "div_" + keyS).noUiSlider.get();
+          try{
+            if (key in features[0].properties){
+            for (i = features.length - 1; i >= 0; --i){
+              if (features[i].properties[key]
+                  < sliderVals[0]
+                  || features[i].properties[key]
+                  > sliderVals[1]){
+                    features.splice(i,1);
+                  }
+                }
+              }
+            } catch(err){
+            }
+          }
+        if (Filters[key] == "date"
+          || Filters[key] == "datetime"
+          || Filters[key] == "time"){
+          try{
+            if (key in features[0].properties){
+              HTMLkey = key.replace(/[&\/\\#,+()$~%.'":*?<>{} ]/g, '');
+              startdate = document.getElementById("dat_" +
+                HTMLkey + "_date1").value.replace(" ", "T");
+              enddate = document.getElementById("dat_" +
+                HTMLkey + "_date2").value.replace(" ", "T");
+              for (i = features.length - 1; i >= 0; --i){
+                if (features[i].properties[key] < startdate
+                  || features[i].properties[key] > enddate){
+                  features.splice(i,1);
+                }
+              }
+            }
+          } catch(err){
+          }
+        }
+      }
+    } catch(err){
+    }
+  this[lyr["options"]["layerName"]].clearLayers();
+  this[lyr["options"]["layerName"]].addData(features);
+  }
+  })
+}
+    document.getElementById("menu").appendChild(
+        document.createElement("div"));
+    var div_Name = document.createElement('div');
+    div_Name.id = "div_Name";
+    div_Name.className= "filterselect";
+    document.getElementById("menu").appendChild(div_Name);
+    sel_Name = document.createElement('select');
+    sel_Name.multiple = true;
+    sel_Name.size = 8;
+    sel_Name.id = "sel_Name";
+    var Name_options_str = "<option value='' unselected></option>";
+    sel_Name.onchange = function(){filterFunc()};
+    Name_options_str  += '<option value="           ">           </option>';
+    Name_options_str  += '<option value=" L’Amphithéâtre de Sbiba"> L’Amphithéâtre de Sbiba</option>';
+    Name_options_str  += '<option value="Citerne publique">Citerne publique</option>';
+    Name_options_str  += '<option value="La Mosquée Sidi Okba de Sufes">La Mosquée Sidi Okba de Sufes</option>';
+    Name_options_str  += '<option value="Le Nymphée de Sufes">Le Nymphée de Sufes</option>';
+    Name_options_str  += '<option value="Maison Fortifiée">Maison Fortifiée</option>';
+    Name_options_str  += '<option value="Maison fortifiée">Maison fortifiée</option>';
+    Name_options_str  += '<option value="Thermes">Thermes</option>';
+    sel_Name.innerHTML = Name_options_str;
+    div_Name.appendChild(sel_Name);
+    var lab_Name = document.createElement('div');
+    lab_Name.innerHTML = 'Name';
+    lab_Name.className = 'filterlabel';
+    div_Name.appendChild(lab_Name);
+    var reset_Name = document.createElement('div');
+    reset_Name.innerHTML = 'clear filter';
+    reset_Name.className = 'filterlabel';
+    reset_Name.onclick = function() {
+        var options = document.getElementById("sel_Name").options;
+        for (var i=0; i < options.length; i++) {
+            options[i].selected = false;
+        }
+        filterFunc();
+    };
+    div_Name.appendChild(reset_Name);
+</script>
+<br>
+<br>
+<br>
+<br>
+</body>
+
+</html>

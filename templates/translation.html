@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Image OCR & Translation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Latin Mosaic Translator</h2>
+
+        <!-- Upload Box -->
+        <div id="uploadBox" class="upload-box">
+            <input type="file" id="imageInput" accept="image/*" style="display: none;"/>
+            <button type="button" class="btn btn-primary choose-btn" id="chooseBtn">Choose Image</button>
+        </div>
+
+        <!-- Preview & Translation Section -->
+        <div id="previewSection" style="display: none;">
+            <h5>Image Preview</h5>
+            <img id="previewImage" src="#" alt="Image Preview"/>
+            <br/>
+            <button id="translateBtn">Translate Image Text</button>
+            <div id="statusMessage"></div>
+            <div id="translationResult"></div>
+        </div>
+    </div>
+
+    <script>
+        const chooseBtn = document.getElementById("chooseBtn");
+        const imageInput = document.getElementById("imageInput");
+        const previewSection = document.getElementById("previewSection");
+        const previewImage = document.getElementById("previewImage");
+        const translateBtn = document.getElementById("translateBtn");
+        const translationResult = document.getElementById("translationResult");
+        const statusMessage = document.getElementById("statusMessage");
+
+        let selectedFile = null;
+
+        chooseBtn.addEventListener("click", () => imageInput.click());
+
+        imageInput.addEventListener("change", () => {
+            if (imageInput.files[0]) {
+                selectedFile = imageInput.files[0];
+                previewImage.src = URL.createObjectURL(selectedFile);
+                previewSection.style.display = "block";
+            }
+        });
+
+        translateBtn.addEventListener("click", async () => {
+            if (!selectedFile) {
+                alert("No image selected.");
+                return;
+            }
+
+            statusMessage.textContent = "Processing OCR...";
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+
+            const ocrResponse = await fetch("/ocr", { method: "POST", body: formData });
+            const ocrResult = await ocrResponse.json();
+            if (!ocrResult.text) {
+                statusMessage.textContent = "No text extracted.";
+                return;
+            }
+
+            statusMessage.textContent = "Translating text...";
+            const translateResponse = await fetch("/translate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: ocrResult.text }),
+            });
+            const translationData = await translateResponse.json();
+            translationResult.textContent = translationData.translation || "No translation available.";
+            statusMessage.textContent = "Done.";
+        });
+    </script>
+</body>
+</html>
